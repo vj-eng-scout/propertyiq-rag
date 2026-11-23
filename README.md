@@ -34,9 +34,21 @@ PropertyIQ aims to make this process faster while preserving source traceability
 
 See **[Business requirements](docs/requirements.md)** for the full numbered list, assumptions, and an example scenario.
 
-## Proposed implementation (not yet committed)
+## Architecture overview
 
-Architecture and technology decisions will be documented after the requirements are reviewed. A possible approach is a Python API, React interface, PostgreSQL/pgvector retrieval store, and a grounded LLM workflow. These are proposals, not implemented components.
+**Planned baseline RAG architecture, not an implemented system.** PropertyIQ prepares property documents for search, then uses retrieved evidence to answer managers' questions.
+
+![Animated PropertyIQ architecture: documents are indexed in PostgreSQL; the Manager UI sends questions to an orchestrator that calls the evidence retrieval tool, coordinates generation and citation validation, and returns the answer.](docs/assets/architecture.gif)
+
+Teal dots illustrate data moving through the planned workflow, not live activity. Solid arrows show the main flow; dotted arrows show lookups and checks. The baseline performs one search. These are logical responsibilities, not separate deployment units.
+
+[Static diagram and editable SVG source](docs/assets/architecture.svg)
+
+- **Prepare documents:** Ingestion and processing build searchable evidence with property, version and source metadata.
+- **Answer questions:** The UI calls the orchestrator, which invokes the retrieval tool once, coordinates generation and citation validation, then returns the result.
+- **Inspect evidence:** Opening a citation triggers a fresh server-side property-access check.
+
+The comparison variant, **agentic RAG**, keeps the same components and allows at most one targeted follow-up search. See [the detailed design](docs/design.md) for strategy flows and quality, latency and cost evaluation.
 
 ## Development and portfolio evidence
 
